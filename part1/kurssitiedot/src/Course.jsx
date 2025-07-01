@@ -1,3 +1,5 @@
+// src/Course.jsx
+
 const Header = ({ course }) => <h2>{course.name}</h2>
 
 const Part = ({ part }) => (
@@ -15,7 +17,6 @@ const Content = ({ parts }) => (
 const Total = ({ parts }) => (
   <p><b>total of {parts.reduce((sum, part) => sum + part.exercises, 0)} exercises</b></p>
 )
-
 
 const Course = ({ course }) => (
   <div>
