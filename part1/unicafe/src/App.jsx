@@ -1,5 +1,16 @@
 import { useState } from 'react'
 
+const Button = ({handleClick,text})=> (
+  <button onClick={handleClick}>{text}</button>
+)
+
+const StatisticsLine = ({text, value}) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+)
+
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad
   if (all === 0 ){
