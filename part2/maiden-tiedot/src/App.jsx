@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Weather from '../components/Weather'
 
 const CountryList = ({ countries, setFilter }) => {
+  
   if (countries.length > 10) {
     return <div>Too many matches, specify another filter</div>
   }
@@ -29,6 +31,7 @@ const CountryList = ({ countries, setFilter }) => {
           {Object.values(country.languages || {}).map(lang => <li key={lang}>{lang}</li>)}
         </ul>
         <img src={country.flags.png} alt="flag" width="150" />
+        <Weather capital={country.capital?.[0]} />
       </div>
     )
   }
