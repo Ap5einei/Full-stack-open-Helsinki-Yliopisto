@@ -1,23 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import personService from './services/Persons'
-
+import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([ ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
+  useEffect(() => {
+    personService.getAll().then(data => setPersons(data))
+  }, [])
+
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
-
-    useEffect(() => {
-    personService.getAll().then(data => setPersons(data))
-  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -26,11 +25,19 @@ const App = () => {
       return
     }
     const personObject = { name: newName, number: newNumber }
-     personService.create(personObject).then(addedPerson => {
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
-     })
+    personService.create(personObject).then(addedPerson => {
+      setPersons(persons.concat(addedPerson))
+      setNewName('')
+      setNewNumber('')
+    })
+  }
+
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+    }
   }
 
   const personsToShow = filter
@@ -53,7 +60,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
   )
 }
