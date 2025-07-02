@@ -12,8 +12,6 @@ app.use(express.static('dist'))
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-const Person = require('./models/person')
-
 
 // --- GET kaikki henkilöt ---
 app.get('/api/persons', (req, res, next) => {
@@ -25,48 +23,45 @@ app.get('/api/persons', (req, res, next) => {
 })
 
 // --- GET yksittäinen henkilö ---
-const getPersonById = (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
-}
-app.get('/api/persons/:id', getPersonById)
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      if (person) {
+        res.json(person)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
+
 
 // --- DELETE henkilö ---
-const deletePerson = (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(p => p.id !== id)
-  res.status(204).end()
-}
-app.delete('/api/persons/:id', deletePerson)
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then(() => res.status(204).end())
+    .catch(error => next(error))
+})
+
 
 // --- POST uusi henkilö ---
-const addPerson = (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
+
   if (!body.name || !body.number) {
     return res.status(400).json({ error: 'name or number missing' })
   }
-  if (persons.find(p => p.name === body.name)) {
-    return res.status(400).json({ error: 'name must be unique' })
-  }
-  const person = {
-    id: Math.floor(Math.random() * 1000000),
+
+  const person = new Person({
     name: body.name,
-    number: body.number
-  }
-  persons = persons.concat(person)
-  res.json(person)
-}
-app.post('/api/persons', addPerson)
-// --- INFO-sivu ---
-app.get('/info', (req, res) => {
-  const info = `Phonebook has info for ${persons.length} people<br>${new Date()}`
-  res.send(info)
+    number: body.number,
+  })
+
+  person.save()
+    .then(savedPerson => res.json(savedPerson))
+    .catch(error => next(error))
 })
+
 
 // --- Tuntematon endpoint ---
 const unknownEndpoint = (req, res) => {
@@ -79,3 +74,13 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+const errorHandler = (error, req, res, next) => {
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
+  }
+  next(error)
+}
+app.use(errorHandler)
