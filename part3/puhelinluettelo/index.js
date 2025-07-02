@@ -1,14 +1,12 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
 
-app.use(express.json())
-
-const cors = require('cors')
 app.use(cors())
+app.use(express.json())
+app.use(express.static('dist'))
 
-
-// Morganin oma token POST-datan näyttämiseen
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
@@ -19,13 +17,15 @@ let persons = [
   { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" }
 ]
 
-// GET kaikki henkilöt
-app.get('/api/persons', (req, res) => {
+// --- GET kaikki henkilöt ---
+const getPersons = (req, res) => {
   res.json(persons)
-})
+}
+app.get('/api/persons', getPersons)
+app.get('/persons', getPersons)
 
-// GET yksittäinen henkilö
-app.get('/api/persons/:id', (req, res) => {
+// --- GET yksittäinen henkilö ---
+const getPersonById = (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(p => p.id === id)
   if (person) {
@@ -33,26 +33,28 @@ app.get('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end()
   }
-})
+}
+app.get('/api/persons/:id', getPersonById)
+app.get('/persons/:id', getPersonById)
 
-// DELETE henkilö
-app.delete('/api/persons/:id', (req, res) => {
+// --- DELETE henkilö ---
+const deletePerson = (req, res) => {
   const id = Number(req.params.id)
   persons = persons.filter(p => p.id !== id)
   res.status(204).end()
-})
+}
+app.delete('/api/persons/:id', deletePerson)
+app.delete('/persons/:id', deletePerson)
 
-// POST uusi henkilö
-app.post('/api/persons', (req, res) => {
+// --- POST uusi henkilö ---
+const addPerson = (req, res) => {
   const body = req.body
-
   if (!body.name || !body.number) {
     return res.status(400).json({ error: 'name or number missing' })
   }
   if (persons.find(p => p.name === body.name)) {
     return res.status(400).json({ error: 'name must be unique' })
   }
-
   const person = {
     id: Math.floor(Math.random() * 1000000),
     name: body.name,
@@ -60,21 +62,24 @@ app.post('/api/persons', (req, res) => {
   }
   persons = persons.concat(person)
   res.json(person)
-})
+}
+app.post('/api/persons', addPerson)
+app.post('/persons', addPerson)
 
-// INFO-sivu
+// --- INFO-sivu ---
 app.get('/info', (req, res) => {
   const info = `Phonebook has info for ${persons.length} people<br>${new Date()}`
   res.send(info)
 })
 
-// Middleware: tuntematon endpoint
+// --- Tuntematon endpoint ---
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndpoint)
 
-const PORT = 3001
+// --- Portti Renderiä ja paikallista varten ---
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

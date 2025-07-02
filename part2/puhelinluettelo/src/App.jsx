@@ -8,7 +8,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-  <ToastContainer />
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -101,6 +100,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <Notification message={notification} type={notificationType} />
       <Filter value={filter} onChange={handleFilterChange} />
+  
+
+    <ToastContainer />
+      
 
       <h3>Add a new</h3>
       <PersonForm
