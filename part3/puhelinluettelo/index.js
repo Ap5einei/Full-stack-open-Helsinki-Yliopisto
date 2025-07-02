@@ -12,19 +12,17 @@ app.use(express.static('dist'))
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-  { id: 1, name: "Arto Hellas", number: "040-123456" },
-  { id: 2, name: "Ada Lovelace", number: "39-44-5323523" },
-  { id: 3, name: "Dan Abramov", number: "12-43-234345" },
-  { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" }
-]
+const Person = require('./models/person')
+
 
 // --- GET kaikki henkilöt ---
-const getPersons = (req, res) => {
-  res.json(persons)
-}
-app.get('/api/persons', getPersons)
-app.get('/persons', getPersons)
+app.get('/api/persons', (req, res, next) => {
+  Person.find({})
+    .then(persons => {
+      res.json(persons)
+    })
+    .catch(error => next(error))
+})
 
 // --- GET yksittäinen henkilö ---
 const getPersonById = (req, res) => {
@@ -37,7 +35,6 @@ const getPersonById = (req, res) => {
   }
 }
 app.get('/api/persons/:id', getPersonById)
-app.get('/persons/:id', getPersonById)
 
 // --- DELETE henkilö ---
 const deletePerson = (req, res) => {
@@ -46,7 +43,6 @@ const deletePerson = (req, res) => {
   res.status(204).end()
 }
 app.delete('/api/persons/:id', deletePerson)
-app.delete('/persons/:id', deletePerson)
 
 // --- POST uusi henkilö ---
 const addPerson = (req, res) => {
@@ -66,8 +62,6 @@ const addPerson = (req, res) => {
   res.json(person)
 }
 app.post('/api/persons', addPerson)
-app.post('/persons', addPerson)
-
 // --- INFO-sivu ---
 app.get('/info', (req, res) => {
   const info = `Phonebook has info for ${persons.length} people<br>${new Date()}`
