@@ -64,11 +64,16 @@ const App = () => {
       setNewNumber('')
     })
     .catch(error => {
-      setNotification('Failed to add person')
+      if (error.response && error.response.data && error.response.data.error) {
+        setNotification(error.response.data.error)
+      } else {
+        setNotification('Failed to add person')
+      }
       setNotificationType('error')
       setTimeout(() => setNotification(null), 4000)
     })
 }
+
 
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
