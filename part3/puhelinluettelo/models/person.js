@@ -1,5 +1,18 @@
 const mongoose = require('mongoose')
 
+mongoose.set('strictQuery', false)
+
+const url = process.env.MONGODB_URI
+
+console.log('connecting to', url)
+mongoose.connect(url)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,8 +25,7 @@ const personSchema = new mongoose.Schema({
     minlength: [8, 'Number must be at least 8 digits'],
     validate: {
       validator: function(v) {
-        // Tarkistetaan muoto: 2-3 numeroa, väliviiva, vähintään 5 numeroa
-        return /^\d{2,3}-\d+$/.test(v)
+        return /^\d{2,3}-\d+-*$/.test(v)
       },
       message: props => `${props.value} is not a valid phone number! Format: XX-XXXXXXX or XXX-XXXXXXX`
     }
