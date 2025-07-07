@@ -15,11 +15,12 @@ const Blog = ({ blog, handleLike, handleRemove, user }) => {
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author}
-        <button onClick={() => setVisible(!visible)}>
-          {visible ? 'hide' : 'view'}
-        </button>
-      </div>
+  <span>{blog.title}</span> <span>{blog.author}</span>
+  <button onClick={() => setVisible(!visible)}>
+    {visible ? 'hide' : 'view'}
+  </button>
+</div>
+
       {visible &&
         <div>
           <div>{blog.url}</div>
