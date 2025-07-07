@@ -6,7 +6,6 @@ import loginService from './services/login'
 import Togglable from './components/Togglable'
 import PropTypes from 'prop-types'
 
-
 const Notification = ({ message }) => {
   if (!message) return null
   return (
@@ -76,15 +75,15 @@ const App = () => {
     notify('Logged out')
   }
 
- const handleLike = async (blog) => {
-  const updatedBlog = {
-    ...blog,
-    likes: blog.likes + 1,
-    user: blog.user.id || blog.user 
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id || blog.user
+    }
+    const returnedBlog = await blogService.update(blog.id, updatedBlog)
+    setBlogs(blogs.map(b => b.id === blog.id ? { ...returnedBlog, user: blog.user } : b))
   }
-  const returnedBlog = await blogService.update(blog.id, updatedBlog)
-  setBlogs(blogs.map(b => b.id === blog.id ? { ...returnedBlog, user: blog.user } : b))
-}
 
   const handleRemove = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
@@ -124,7 +123,8 @@ const App = () => {
       <Notification message={notification} />
       {user === null
         ? loginForm()
-        : <div>
+        : (
+          <div>
             <p>
               {user.name} logged in
               <button onClick={handleLogout}>logout</button>
@@ -139,7 +139,7 @@ const App = () => {
             </Togglable>
             {blogs
               .slice()
-              .sort((a, b) => b.likes - a.likes) 
+              .sort((a, b) => b.likes - a.likes)
               .map(blog =>
                 <Blog
                   key={blog.id}
@@ -151,9 +151,14 @@ const App = () => {
               )
             }
           </div>
+        )
       }
     </div>
   )
+}
+
+Notification.propTypes = {
+  message: PropTypes.object
 }
 
 export default App
