@@ -1,3 +1,6 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+// Alkuperäiset anekdootit
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -7,6 +10,7 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
+// Mock-palvelut suoraan tässä tiedostossa
 const getAll = async () => {
   return anecdotesAtStart.map(anecdote => ({
     content: anecdote,
@@ -15,4 +19,47 @@ const getAll = async () => {
   }))
 }
 
-export default { getAll }
+const createNew = async (content) => {
+  return {
+    content,
+    id: (100000 * Math.random()).toFixed(0),
+    votes: 0
+  }
+}
+
+// Reducer
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState: [],
+  reducers: {
+    voteAnecdote(state, action) {
+      const id = action.payload
+      const anecdoteToChange = state.find(a => a.id === id)
+      anecdoteToChange.votes += 1
+    },
+    appendAnecdote(state, action) {
+      state.push(action.payload)
+    },
+    setAnecdotes(state, action) {
+      return action.payload
+    }
+  }
+})
+
+// Thunkit
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await getAll()
+    dispatch(setAnecdotes(anecdotes))
+  }
+}
+
+export const createAnecdoteAsync = (content) => {
+  return async dispatch => {
+    const newAnecdote = await createNew(content)
+    dispatch(appendAnecdote(newAnecdote))
+  }
+}
+
+export const { voteAnecdote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
