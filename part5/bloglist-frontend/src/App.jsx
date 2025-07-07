@@ -74,16 +74,15 @@ const App = () => {
     notify('Logged out')
   }
 
-  const handleLike = async (blog) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id 
-    }
-    const returnedBlog = await blogService.update(blog.id, updatedBlog)
-    setBlogs(blogs.map(b => b.id === blog.id ? { ...returnedBlog, user: blog.user } : b))
-    notify(`You liked "${blog.title}"`)
+ const handleLike = async (blog) => {
+  const updatedBlog = {
+    ...blog,
+    likes: blog.likes + 1,
+    user: blog.user.id || blog.user 
   }
+  const returnedBlog = await blogService.update(blog.id, updatedBlog)
+  setBlogs(blogs.map(b => b.id === blog.id ? { ...returnedBlog, user: blog.user } : b))
+}
 
   const handleRemove = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
