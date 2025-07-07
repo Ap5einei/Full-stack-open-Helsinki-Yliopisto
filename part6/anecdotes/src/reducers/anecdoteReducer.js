@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import anecdoteService from '../services/anecdotes'
+import anecdoteService from '../reducers/anecdotes'
 
 // Alkuperäiset anekdootit
 const anecdotesAtStart = [
