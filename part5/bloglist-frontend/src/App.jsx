@@ -21,6 +21,10 @@ const Notification = ({ message }) => {
   )
 }
 
+Notification.propTypes = {
+  message: PropTypes.object
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -52,12 +56,8 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUser(user)
       blogService.setToken(user.token)
       setUsername('')
@@ -90,6 +90,17 @@ const App = () => {
       await blogService.remove(blog.id)
       setBlogs(blogs.filter(b => b.id !== blog.id))
       notify(`Blog "${blog.title}" removed`)
+    }
+  }
+
+  const createBlog = async (blogObject) => {
+    try {
+      const newBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(newBlog))
+      blogFormRef.current.toggleVisibility()
+      notify(`A new blog "${newBlog.title}" by ${newBlog.author} added`)
+    } catch (error) {
+      notify('Error creating blog', 'error')
     }
   }
 
@@ -130,12 +141,7 @@ const App = () => {
               <button onClick={handleLogout}>logout</button>
             </p>
             <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-              <BlogForm createBlog={async (blogObject) => {
-                await blogService.create(blogObject)
-                blogService.getAll().then(blogs => setBlogs(blogs))
-                blogFormRef.current.toggleVisibility()
-                notify(`A new blog "${blogObject.title}" by ${blogObject.author} added`)
-              }} />
+              <BlogForm createBlog={createBlog} />
             </Togglable>
             {blogs
               .slice()
