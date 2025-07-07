@@ -22,8 +22,8 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  // Token voimassa 1h
-  const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
+
+  const token = jwt.sign(userForToken, process.env.JWT_SECRET, { expiresIn: 60*60 })
 
   response
     .status(200)
