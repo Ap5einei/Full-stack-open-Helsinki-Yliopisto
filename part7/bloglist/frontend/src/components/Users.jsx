@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
-import { initializeUsers } from '../reducers/usersSlice'
+import { initializeUsers } from '../reducers/userSlice'
 import { Link } from 'react-router-dom'
 
 const Users = () => {
