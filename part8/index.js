@@ -1,6 +1,8 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const typeDefs = require('./schema')
 
+// Data
 let authors = [
   { name: "Robert Martin", id: "1", born: 1952 },
   { name: "Martin Fowler", id: "2", born: 1963 },
@@ -40,58 +42,22 @@ let books = [
   }
 ]
 
-// Skeema
-const typeDefs = `
-  type Book {
-    title: String!
-    published: Int!
-    author: String!
-    genres: [String!]!
-    id: ID!
-  }
-  type Author {
-    name: String!
-    born: Int
-    bookCount: Int!
-    id: ID!
-  }
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks: [Book!]!
-    allAuthors: [Author!]!
-  }
-  type Mutation {
-    addBook(
-      title: String!
-      author: String!
-      published: Int!
-      genres: [String!]!
-    ): Book
-    editAuthor(
-      name: String!
-      setBornTo: Int!
-    ): Author
-  }
-`
-
 // Resolverit
 const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
-    allAuthors: () =>
-      authors.map(a => ({
-        ...a,
-        bookCount: books.filter(b => b.author === a.name).length
-      }))
+    allAuthors: () => authors
+  },
+  Author: {
+    bookCount: (root) => books.filter(b => b.author === root.name).length
   },
   Mutation: {
     addBook: (root, args) => {
       const newBook = { ...args, id: Math.random().toString(36).slice(2) }
       books = books.concat(newBook)
-      // Lisätään uusi kirjailija, jos ei vielä ole
+      // Lisää kirjailija, jos ei vielä ole
       if (!authors.find(a => a.name === args.author)) {
         authors = authors.concat({ name: args.author, id: Math.random().toString(36).slice(2) })
       }

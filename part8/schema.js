@@ -31,3 +31,4 @@ const typeDefs = `
     ): Author
   }
 `
+module.exports = typeDefs
