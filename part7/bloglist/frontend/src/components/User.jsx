@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom'
 
 const User = () => {
   const { id } = useParams()
-  const user = useSelector(state => state.users.find(u => u.id === id))
+  const users = useSelector(state => state.users)
+  // Varmistetaan, että users on taulukko ennen kuin käytetään find
+  const user = Array.isArray(users) ? users.find(u => u.id === id) : null
 
   if (!user) return <div>User not found</div>
 
