@@ -1,33 +1,32 @@
-import { gql, useQuery } from '@apollo/client'
-import './App.css';
+import React, { useState } from 'react'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import Authors from './Authors'
+import Books from './Books'
+import NewBook from './NewBook'
+import SetBirthyear from './SetBirthyear'
 
-const ALL_PERSONS = gql`
-  query {
-    allPersons {
-      name
-      phone
-      id
-    }
-  }
-`
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+})
 
-function App() {
-  const { loading, error, data } = useQuery(ALL_PERSONS)
-
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
+const App = () => {
+  const [page, setPage] = useState('authors')
 
   return (
-    <div>
-      <h1>Persons</h1>
-      <ul>
-        {data.allPersons.map(person => (
-          <li key={person.id}>
-            {person.name} {person.phone}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ApolloProvider client={client}>
+      <div>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('setbirthyear')}>set birthyear</button>
+
+        {page === 'authors' && <Authors />}
+        {page === 'books' && <Books />}
+        {page === 'add' && <NewBook />}
+        {page === 'setbirthyear' && <SetBirthyear />}
+      </div>
+    </ApolloProvider>
   )
 }
 
