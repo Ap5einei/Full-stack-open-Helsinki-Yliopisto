@@ -1,6 +1,15 @@
-import { Provider } from 'react-redux'
-import store from './store'
 
-<Provider store={store}>
-  <App />
-</Provider>
+import { configureStore } from '@reduxjs/toolkit'
+import notificationReducer from './reducers/notificationSlice'
+import blogsReducer from './reducers/blogsSlice'
+import usersReducer from './reducers/usersSlice'
+
+const store = configureStore({
+  reducer: {
+    notification: notificationReducer,
+    blogs: blogsReducer,
+    users: usersReducer,
+  },
+})
+
+export default store
