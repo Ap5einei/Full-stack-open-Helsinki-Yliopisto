@@ -1,0 +1,34 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background: #e3e3e3;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+nav a {
+  margin-right: 1em;
+  text-decoration: none;
+  color: #333;
+}
+
+nav a.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.notification {
+  margin: 1em 0;
+  padding: 1em;
+  border: 2px solid #007bff;
+  background: #e6f0ff;
+}
+
+button {
+  margin-left: 0.5em;
+}
