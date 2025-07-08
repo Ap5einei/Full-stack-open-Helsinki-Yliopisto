@@ -14,20 +14,31 @@ const getAll = async () => {
 
 const create = async newObject => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   }
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }
 
-const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject)
+const update = async (id, blogObject) => {
+  // Muodosta päivitettävä blogi: user on id, likes ei ole null, id-kenttä pois
+  const updatedBlog = {
+    ...blogObject,
+    user: blogObject.user.id ? blogObject.user.id : blogObject.user,
+    likes: blogObject.likes ?? 0
+  }
+  delete updatedBlog.id
+
+  const config = {
+    headers: { Authorization: token }
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config)
   return response.data
 }
 
 const remove = async (id) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   }
   await axios.delete(`${baseUrl}/${id}`, config)
 }

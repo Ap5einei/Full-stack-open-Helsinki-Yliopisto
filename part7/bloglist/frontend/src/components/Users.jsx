@@ -1,5 +1,5 @@
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react'
 import { initializeUsers } from '../reducers/usersSlice'
 import { Link } from 'react-router-dom'
 
@@ -10,6 +10,9 @@ const Users = () => {
   useEffect(() => {
     dispatch(initializeUsers())
   }, [dispatch])
+
+  // Debug: tulosta käyttäjät konsoliin
+  console.log('users:', users)
 
   return (
     <div>

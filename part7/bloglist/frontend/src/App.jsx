@@ -5,7 +5,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import Users from './components/User'
+import Users from './components/Users'
 import User from './components/User'
 import BlogDetails from './components/BlogDetails'
 import { initializeBlogs, likeBlog, deleteBlog, createNewBlog } from './reducers/blogsSlice'
@@ -37,7 +37,8 @@ const App = () => {
   const blogFormRef = useRef()
   const navigate = useNavigate()
 
-  useEffect(() => {
+  useEffect
+  (() => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
