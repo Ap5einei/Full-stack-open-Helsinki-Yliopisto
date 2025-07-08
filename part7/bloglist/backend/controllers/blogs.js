@@ -3,7 +3,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const userExtractor = require('../utils/userExtractor')
 
-// Hae kaikki blogit, populate käyttäjän tiedot
+// Hae kaikki blogit, mukaan käyttäjän tiedot
 blogsRouter.get('/', async (request, response, next) => {
   try {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -28,7 +28,6 @@ blogsRouter.post('/', userExtractor, async (request, response, next) => {
     await user.save()
 
     const populatedBlog = await Blog.findById(savedBlog._id).populate('user', { username: 1, name: 1 })
-
     response.status(201).json(populatedBlog)
   } catch (error) {
     next(error)
@@ -41,7 +40,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
     const { title, author, url, likes, user } = request.body
     const updatedBlog = await Blog.findByIdAndUpdate(
       request.params.id,
-      { title, author, url, likes, user },
+      { title, author, url, likes: likes ?? 0, user },
       { new: true, runValidators: true, context: 'query' }
     ).populate('user', { username: 1, name: 1 })
 
@@ -68,7 +67,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
       return response.status(401).json({ error: 'Unauthorized: only the creator can delete the blog' })
     }
 
-    await Blog.findByIdAndRemove(request.params.id)
+    await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
   } catch (error) {
     next(error)
