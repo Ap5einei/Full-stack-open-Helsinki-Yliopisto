@@ -8,58 +8,12 @@ const { GraphQLError } = require('graphql')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
+const typeDefs = require('./schema')
 
 mongoose.set('strictQuery', false)
-
-const MONGODB_URI = process.env.MONGODB_URI
-
-console.log('connecting to', MONGODB_URI)
-mongoose.connect(MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('connected to MongoDB'))
   .catch((error) => console.log('error connection to MongoDB:', error.message))
-
-const typeDefs = `
-  type Book {
-    title: String!
-    published: Int!
-    author: Author!
-    genres: [String!]!
-    id: ID!
-  }
-  type Author {
-    name: String!
-    born: Int
-    bookCount: Int!
-    id: ID!
-  }
-  type User {
-    username: String!
-    friends: [Person!]!
-    id: ID!
-  }
-  type Token {
-    value: String!
-  }
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-    me: User
-  }
-  type Mutation {
-    addBook(
-      title: String!
-      author: String!
-      published: Int!
-      genres: [String!]!
-    ): Book!
-    editAuthor(name: String!, setBornTo: Int!): Author
-    createUser(username: String!): User
-    login(username: String!, password: String!): Token
-    addAsFriend(name: String!): User
-  }
-`
 
 const resolvers = {
   Query: {
@@ -149,27 +103,6 @@ const resolvers = {
       }
       const userForToken = { username: user.username, id: user._id }
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
-    },
-    addAsFriend: async (root, args, { currentUser }) => {
-      if (!currentUser) {
-        throw new GraphQLError('not authenticated', {
-          extensions: { code: 'BAD_USER_INPUT' }
-        })
-      }
-      const person = await Person.findOne({ name: args.name })
-      if (!person) {
-        throw new GraphQLError('person not found', {
-          extensions: { code: 'BAD_USER_INPUT' }
-        })
-      }
-      const alreadyFriend = currentUser.friends
-        .map(f => f._id.toString())
-        .includes(person._id.toString())
-      if (!alreadyFriend) {
-        currentUser.friends = currentUser.friends.concat(person)
-        await currentUser.save()
-      }
-      return currentUser.populate('friends')
     }
   }
 }
