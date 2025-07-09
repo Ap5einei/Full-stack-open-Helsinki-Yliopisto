@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_BACKEND_URI, // <-- TÄMÄ MUUTTUU!
+  uri: process.env.REACT_APP_BACKEND_URI,
 })
 
 const authLink = setContext((_, { headers }) => {
@@ -16,9 +16,8 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const client = new ApolloClient({
-  link: createHttpLink({ uri: process.env.REACT_APP_BACKEND_URI }),
+  link: authLink.concat(httpLink), // <-- TÄRKEÄ KORJAUS!
   cache: new InMemoryCache(),
 })
-
 
 export default client
