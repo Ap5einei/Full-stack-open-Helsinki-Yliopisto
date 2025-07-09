@@ -1,5 +1,8 @@
 import express from 'express';
 import diaryRouter from './routes/diaries';
+import { DiaryEntry } from './types';
+export type NonSensitiveDiaryEntry = Omit<DiaryEntry, 'comment'>;
+
 
 const app = express();
 app.use(express.json());
