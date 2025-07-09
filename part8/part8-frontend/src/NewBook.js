@@ -1,26 +1,8 @@
 import { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from './queries'
 
-const CREATE_BOOK = gql`
-  mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
-    addBook(
-      title: $title,
-      author: $author,
-      published: $published,
-      genres: $genres
-    ) {
-      title
-      author
-      published
-      id
-    }
-  }
-`
-
-const ALL_BOOKS = gql`query { allBooks { title author published id } }`
-const ALL_AUTHORS = gql`query { allAuthors { name born bookCount } }`
-
-const NewBook = () => {
+const NewBook = ({ setError }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -28,7 +10,8 @@ const NewBook = () => {
   const [genres, setGenres] = useState([])
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    onError: (error) => setError(error.graphQLErrors[0]?.message)
   })
 
   const submit = async (event) => {
@@ -48,23 +31,23 @@ const NewBook = () => {
 
   return (
     <div>
-      <h2>Add Book</h2>
+      <h2>Lisää kirja</h2>
       <form onSubmit={submit}>
         <div>
-          Title <input value={title} onChange={({ target }) => setTitle(target.value)} />
+          Nimi <input value={title} onChange={({ target }) => setTitle(target.value)} />
         </div>
         <div>
-          Author <input value={author} onChange={({ target }) => setAuthor(target.value)} />
+          Kirjailija <input value={author} onChange={({ target }) => setAuthor(target.value)} />
         </div>
         <div>
-          Published <input type="number" value={published} onChange={({ target }) => setPublished(target.value)} />
+          Julkaistu <input type="number" value={published} onChange={({ target }) => setPublished(target.value)} />
         </div>
         <div>
           <input value={genre} onChange={({ target }) => setGenre(target.value)} />
-          <button type="button" onClick={addGenre}>add genre</button>
+          <button type="button" onClick={addGenre}>lisää genre</button>
         </div>
-        <div>Genres: {genres.join(' ')}</div>
-        <button type="submit">create book</button>
+        <div>Genret: {genres.join(' ')}</div>
+        <button type="submit">luo kirja</button>
       </form>
     </div>
   )

@@ -1,38 +1,150 @@
-.App {
+@import url('https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap');
+
+body {
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f9d6e5 0%, #bfa7f2 100%);
+  color: #2d2342;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #2d2342;
+}
+
+h1 {
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.slogan {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+  color: #a259c6;
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.slogan-sub {
+  display: block;
+  font-size: 1.05rem;
+  color: #bfa7f2;
+  font-weight: 400;
+  margin-top: 0.4rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+nav {
+  display: flex;
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.nav-btn {
+  background: linear-gradient(90deg, #f9d6e5 0%, #bfa7f2 100%);
+  color: #2d2342;
+  border: none;
+  border-radius: 24px;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(162,89,198,0.08);
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+.nav-btn:hover, .nav-btn:focus {
+  background: linear-gradient(90deg, #bfa7f2 0%, #f9d6e5 100%);
+  color: #a259c6;
+  transform: translateY(-2px) scale(1.05);
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background: #fff;
+  color: #2d2342;
+  padding: 2.5rem 3rem 1.5rem 3rem;
+  margin-top: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(162,89,198,0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 90vw;
+  max-width: 850px;
 }
 
-.App-link {
-  color: #61dafb;
+.main-content {
+  margin-top: 2rem;
+  background: #fff;
+  color: #2d2342;
+  padding: 2.5rem 2.5rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(162,89,198,0.07);
+  min-width: 320px;
+  max-width: 850px;
+  width: 90vw;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button, input[type="submit"] {
+  background: linear-gradient(90deg, #bfa7f2 0%, #f9d6e5 100%);
+  color: #2d2342;
+  border: none;
+  border-radius: 24px;
+  padding: 0.7em 2em;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+button:hover, input[type="submit"]:hover {
+  background: linear-gradient(90deg, #f9d6e5 0%, #bfa7f2 100%);
+  color: #a259c6;
+  transform: translateY(-2px) scale(1.04);
+}
+
+input[type="text"], input[type="password"], input[type="number"] {
+  padding: 0.7em;
+  border: 1px solid #e0b8ff;
+  border-radius: 8px;
+  margin-bottom: 0.7em;
+  font-size: 1em;
+  width: 100%;
+  max-width: 340px;
+  background: #f9f6fb;
+  transition: border 0.2s;
+}
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+  border: 2px solid #a259c6;
+  outline: none;
+  background: #f1e6fa;
+}
+
+form {
+  background: #fff;
+  color: #2d2342;
+  padding: 2em;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(162,89,198,0.06);
+  max-width: 440px;
+  margin: 2em auto;
+}
+
+.notification {
+  margin: 1em auto;
+  padding: 1em 2em;
+  border: 2px solid #a259c6;
+  background: #f1e6fa;
+  color: #a259c6;
+  border-radius: 8px;
+  max-width: 500px;
+  font-size: 1.1em;
+  box-shadow: 0 2px 8px rgba(162,89,198,0.03);
 }

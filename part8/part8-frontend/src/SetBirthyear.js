@@ -1,25 +1,19 @@
 import { useState } from 'react'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
+import { ALL_AUTHORS, EDIT_AUTHOR } from './queries'
 
-const SET_BIRTHYEAR = gql`
-  mutation editAuthor($name: String!, $setBornTo: Int!) {
-    editAuthor(name: $name, setBornTo: $setBornTo) {
-      name
-      born
-      bookCount
-    }
-  }
-`
-const ALL_AUTHORS = gql`query { allAuthors { name born bookCount } }`
-
-const SetBirthyear = () => {
-  const { data } = useQuery(ALL_AUTHORS)
+const SetBirthyear = ({ setError }) => {
+  const { data, loading } = useQuery(ALL_AUTHORS)
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
-  const [editAuthor] = useMutation(SET_BIRTHYEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => setError(error.graphQLErrors[0]?.message)
   })
+
+  if (loading) return <div>loading...</div>
+  const authors = data.allAuthors
 
   const submit = async (event) => {
     event.preventDefault()
@@ -28,25 +22,27 @@ const SetBirthyear = () => {
     setBorn('')
   }
 
-  if (!data) return null
-
   return (
     <div>
-      <h3>Set birthyear</h3>
+      <h2>Aseta kirjailijan syntymävuosi</h2>
       <form onSubmit={submit}>
         <div>
-          Name
           <select value={name} onChange={({ target }) => setName(target.value)}>
-            <option value="">Select author</option>
-            {data.allAuthors.map(a =>
+            <option value="">Valitse kirjailija</option>
+            {authors.map(a =>
               <option key={a.name} value={a.name}>{a.name}</option>
             )}
           </select>
         </div>
         <div>
-          Born <input type="number" value={born} onChange={({ target }) => setBorn(target.value)} />
+          Syntymävuosi{' '}
+          <input
+            type="number"
+            value={born}
+            onChange={({ target }) => setBorn(target.value)}
+          />
         </div>
-        <button type="submit">update author</button>
+        <button type="submit">tallenna</button>
       </form>
     </div>
   )

@@ -1,41 +1,31 @@
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from './queries'
 
-const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      author
-      published
-      id
-    }
-  }
-`
+const Books = ({ setError }) => {
+  const result = useQuery(ALL_BOOKS)
 
-const Books = () => {
-  const { loading, error, data } = useQuery(ALL_BOOKS)
-
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
+  if (result.loading) return <div>loading...</div>
+  const books = result.data.allBooks
 
   return (
     <div>
-      <h2>Books</h2>
+      <h2>Kirjat</h2>
       <table>
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Published</th>
+            <th>Nimi</th>
+            <th>Kirjailija</th>
+            <th>Julkaistu</th>
           </tr>
         </thead>
         <tbody>
-          {data.allBooks.map(b => (
+          {books.map(b =>
             <tr key={b.id}>
               <td>{b.title}</td>
-              <td>{b.author}</td>
+              <td>{b.author.name}</td>
               <td>{b.published}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
