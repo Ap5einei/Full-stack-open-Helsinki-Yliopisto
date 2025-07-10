@@ -5,6 +5,7 @@ const patients: Patient[] = [
     id: "1",
     name: "John Doe",
     dateOfBirth: "1990-01-01",
+    ssn: "123-45-6789",
     gender: "male",
     occupation: "Engineer"
   },
@@ -12,6 +13,7 @@ const patients: Patient[] = [
     id: "2",
     name: "Jane Smith",
     dateOfBirth: "1985-05-10",
+    ssn: "987-65-4321",
     gender: "female",
     occupation: "Teacher"
   }
