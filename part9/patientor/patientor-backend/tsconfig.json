@@ -2,13 +2,13 @@
   "compilerOptions": {
     "target": "es2020",                    // Moderni JS-taso
     "module": "commonjs",                  // Node.js yhteensopivuus
-    "rootDir": "src",                      // Lähdekoodin kansio
+    "rootDir": ".",                        // Lähdekoodin kansio
     "outDir": "build",                     // Käännetyn koodin kansio
     "strict": true,                        // Kaikki tiukat tarkistukset päälle
     "esModuleInterop": true,               // Helpottaa npm-moduulien tuontia
     "skipLibCheck": true,                  // Nopeuttaa käännöstä, ei tarkista node_modules
     "forceConsistentCasingInFileNames": true // Estää kirjainkoon virheet
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "data", "src/routes"],
   "exclude": ["node_modules", "build"]
 }

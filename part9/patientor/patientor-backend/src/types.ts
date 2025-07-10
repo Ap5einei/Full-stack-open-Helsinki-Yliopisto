@@ -7,3 +7,17 @@ export interface DiaryEntry {
 }
 
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, 'comment'>;
+
+export interface Patient {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  gender: 'male' | 'female' | 'other';
+  occupation: string;
+}
+
+export interface Diagnosis {
+  code: string;
+  name: string;
+  latin?: string;
+}
