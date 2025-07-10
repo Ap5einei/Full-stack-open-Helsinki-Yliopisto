@@ -7,6 +7,15 @@ router.get('/', (_req, res) => {
   res.json(patientService.getPatients());
 });
 
+router.get('/:id', (req, res) => {
+  const patient = patientService.getPatient(req.params.id);
+  if (patient) {
+    res.json(patient);
+  } else {
+    res.status(404).json({ error: 'Patient not found' });
+  }
+});
+
 router.post('/', (req, res) => {
   const { name, dateOfBirth, ssn, gender, occupation } = req.body;
   if (!name || !dateOfBirth || !ssn || !gender || !occupation) {
@@ -16,12 +25,14 @@ router.post('/', (req, res) => {
   res.json(newPatient);
 });
 
-router.get('/:id', (req, res) => {
-  const patient = patientService.findById(req.params.id);
-  if (patient) {
-    res.json(patient);
+router.post('/:id/entries', (req, res) => {
+  const patientId = req.params.id;
+  const entry = req.body;
+  const newEntry = patientService.addEntry(patientId, entry);
+  if (newEntry) {
+    res.json(newEntry);
   } else {
-    res.status(404).json({ error: 'Patient not found' });
+    res.status(400).json({ error: 'Could not add entry' });
   }
 });
 
