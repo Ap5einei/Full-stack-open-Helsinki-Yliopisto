@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOne, addEntry } from "../services/patientService";
+import { getOne } from "../services/patientService";
 import type { Patient, Entry } from "../types";
+import { Container, Typography, Paper, List, ListItem, ListItemText } from "@mui/material";
 
 const PatientDetails = () => {
   const { id } = useParams();
@@ -14,28 +15,40 @@ const PatientDetails = () => {
   if (!patient) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h2>{patient.name}</h2>
-      <p>Gender: {patient.gender}</p>
-      <p>Date of birth: {patient.dateOfBirth}</p>
-      <p>Occupation: {patient.occupation}</p>
-      <h3>Entries</h3>
-      <ul>
-        {patient.entries.map((entry: Entry) => (
-          <li key={entry.id}>
-            <b>{entry.date}</b>: {entry.description}
-            {entry.diagnosisCodes && (
-              <ul>
-                {entry.diagnosisCodes.map(code => (
-                  <li key={code}>{code}</li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-      {/* Lisää lomake uuden merkinnän lisäämiseksi tähän */}
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>{patient.name}</Typography>
+      <Typography>Gender: {patient.gender}</Typography>
+      <Typography>Date of birth: {patient.dateOfBirth}</Typography>
+      <Typography>Occupation: {patient.occupation}</Typography>
+      <Typography variant="h6" sx={{ mt: 2 }}>Entries</Typography>
+      <Paper elevation={2} sx={{ mt: 1 }}>
+        <List>
+          {patient.entries.length === 0 && (
+            <ListItem>
+              <ListItemText primary="No entries." />
+            </ListItem>
+          )}
+          {patient.entries.map((entry: Entry) => (
+            <ListItem key={entry.id} divider>
+              <ListItemText
+                primary={`${entry.date} (${entry.type})`}
+                secondary={
+                  <>
+                    <div>{entry.description}</div>
+                    {entry.diagnosisCodes && (
+                      <div>
+                        Diagnoses: {entry.diagnosisCodes.join(", ")}
+                      </div>
+                    )}
+                    <div>Specialist: {entry.specialist}</div>
+                  </>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+    </Container>
   );
 };
 

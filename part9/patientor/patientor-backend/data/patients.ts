@@ -1,4 +1,4 @@
-import { Patient } from '../src/types';
+import { Patient, Entry } from '../src/types';
 
 const patients: Patient[] = [
   {
@@ -8,7 +8,17 @@ const patients: Patient[] = [
     ssn: "123-45-6789",
     gender: "male",
     occupation: "Engineer",
-    entries: []
+    entries: [
+      {
+        id: "100",
+        date: "2023-01-01",
+        type: "HealthCheck",
+        specialist: "Dr. House",
+        description: "Yearly checkup",
+        healthCheckRating: 0,
+        diagnosisCodes: ["A00"]
+      }
+    ]
   },
   {
     id: "2",

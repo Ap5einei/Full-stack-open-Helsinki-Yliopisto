@@ -18,7 +18,7 @@ export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: number;
 }
 
-export type Entry = HealthCheckEntry; // Lisää muut tyypit myöhemmin
+export type Entry = HealthCheckEntry;
 
 export interface Patient {
   id: string;

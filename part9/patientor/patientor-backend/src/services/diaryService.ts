@@ -1,20 +1,10 @@
-import diaryEntries from '../../data/entries';
-import { DiaryEntry, NonSensitiveDiaryEntry } from '../types';
+import diagnoses from '../../data/diagnoses';
+import { Diagnosis } from '../types';
 
-const getEntries = (): DiaryEntry[] => {
-  return diaryEntries;
-};
-
-const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[] => {
-  return diaryEntries.map(({ id, date, weather, visibility }) => ({
-    id,
-    date,
-    weather,
-    visibility
-  }));
+const getDiagnoses = (): Diagnosis[] => {
+  return diagnoses;
 };
 
 export default {
-  getEntries,
-  getNonSensitiveEntries
+  getDiagnoses
 };
